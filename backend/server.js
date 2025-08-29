@@ -5,7 +5,19 @@ import fetch from 'node-fetch';
 const app = express();
 app.use(cors());
 app.use(express.json());
-app.use(express.static('public'));
+// Serve static with conservative caching to avoid stale assets during development
+app.use(express.static('public', {
+  etag: true,
+  lastModified: true,
+  maxAge: 0,
+  setHeaders: (res, path) => {
+    if (path.endsWith('index.html')) {
+      res.setHeader('Cache-Control', 'no-store');
+    } else {
+      res.setHeader('Cache-Control', 'no-cache');
+    }
+  }
+}));
 
 const SYMBOL = '^NSEI';
 const VIX_SYMBOL = '^INDIAVIX';
@@ -196,6 +208,9 @@ app.get('/api/nifty', async (req, res) => {
     if (closes.length < 100) return res.status(400).json({ error: `Only ${closes.length} data points (need 100)` });
 
     const currentPrice = meta.regularMarketPrice;
+    const chartPrevClose = meta.chartPreviousClose ?? meta.previousClose ?? (closes.length >= 2 ? closes[closes.length - 2] : currentPrice);
+    const change = currentPrice - chartPrevClose;
+    const percentChange = chartPrevClose ? (change / chartPrevClose) * 100 : 0;
     const ma10 = calculateMA(closes, 10);
     const ma15 = calculateMA(closes, 15);
     const ma20 = calculateMA(closes, 20);
@@ -218,6 +233,8 @@ app.get('/api/nifty', async (req, res) => {
     const payload = {
       symbol: 'NIFTY 50',
       currentPrice,
+      change: parseFloat(change.toFixed(2)),
+      percentChange: parseFloat(percentChange.toFixed(2)),
       maPrediction: maPrediction.signal,
       ma: {
         ma10: ma10[ma10.length - 1],

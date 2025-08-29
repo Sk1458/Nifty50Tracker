@@ -20,3 +20,89 @@
 .tag-neutral{background:rgba(148,163,184,.15);color:#e2e8f0}
 .tag-warn{background:rgba(245,158,11,.15);color:#fde68a}
 
+:root{--accent-2:#22d3ee;--bull-2:#16a34a;--bear-2:#b91c1c;--neutral:#64748b;--surface:#0b1329;--ring:#1e293b;--shadow:rgba(0,0,0,.35);--ema:#60a5fa;--sma:#34d399;--vwap:#a78bfa;--macd:#f472b6;--signal:#fb7185;--rsi-over:#f59e0b;--rsi-under:#22d3ee}
+.btn,.card,.badge,.tag-bull,.tag-bear,.tag-neutral,.tag-warn{transition:all .2s ease}
+.app-header{box-shadow:0 1px 0 #111827,0 8px 24px -18px var(--shadow)}
+.brand{text-transform:uppercase;letter-spacing:1px}
+.times .dot{width:6px;height:6px;border-radius:50%;background:#16a34a;box-shadow:0 0 0 3px rgba(22,163,74,.15)}
+
+.card{background:linear-gradient(180deg,rgba(15,23,42,.96),rgba(11,19,41,.96));box-shadow:0 8px 24px -22px var(--shadow)}
+.card:hover{border-color:#243244;transform:translateY(-1px)}
+
+.btn{background:linear-gradient(180deg,var(--accent),#2ab2eb);box-shadow:0 8px 18px -10px rgba(56,189,248,.45)}
+.btn:hover{filter:brightness(1.04);transform:translateY(-1px)}
+.btn:active{transform:translateY(0)}
+.btn.secondary{background:#1f2937;color:var(--text);border:1px solid #2a3a52}
+.btn.secondary:hover{border-color:#36506f}
+.btn.ghost{background:transparent;border:1px solid #26455c;color:#9bdcff}
+.btn.ghost:hover{background:rgba(56,189,248,.08)}
+
+.badge{background:linear-gradient(180deg,#0f2030,#0f172a);border:1px solid #223045;color:#cfe7ff}
+.badge.warn{background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.35);color:#ffdf9a}
+.badge.bull{background:rgba(34,197,94,.12);border-color:rgba(34,197,94,.35);color:#a8f0c1}
+.badge.bear{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.35);color:#ffd0d0}
+
+.metric .value{line-height:1.1}
+.metric.small .value{font-size:18px}
+.metric .delta{font-size:12px;font-weight:600}
+.metric.bull .value,.metric .value.pos{color:var(--bull)}
+.metric.bear .value,.metric .value.neg{color:var(--bear)}
+.metric.neutral .value{color:#cbd5e1}
+.metric .delta.pos{color:#86efac}
+.metric .delta.neg{color:#fecaca}
+.metric .delta.neutral{color:#cbd5e1}
+
+.kv strong{color:#e5edf7}
+.kv .pos{color:var(--bull)}
+.kv .neg{color:var(--bear)}
+.kv .warn{color:var(--warn)}
+.kv:last-child{border-bottom:none}
+
+.tag-bull{background:rgba(34,197,94,.12);color:#b7f6ce;border:1px solid rgba(34,197,94,.35);box-shadow:inset 0 -1px 0 rgba(34,197,94,.25)}
+.tag-bear{background:rgba(239,68,68,.12);color:#ffd5d5;border:1px solid rgba(239,68,68,.35);box-shadow:inset 0 -1px 0 rgba(239,68,68,.25)}
+.tag-neutral{background:rgba(100,116,139,.15);color:#e2e8f0;border:1px solid rgba(100,116,139,.35);box-shadow:inset 0 -1px 0 rgba(100,116,139,.25)}
+.tag-warn{background:rgba(245,158,11,.12);color:#ffe7ad;border:1px solid rgba(245,158,11,.35);box-shadow:inset 0 -1px 0 rgba(245,158,11,.25)}
+
+.indicator{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid #223046;background:#0f192a;color:#cbd5e1}
+.indicator .dot{width:8px;height:8px;border-radius:50%}
+.indicator.bull{border-color:rgba(34,197,94,.35);background:rgba(34,197,94,.08);color:#b7f6ce}
+.indicator.bull .dot{background:var(--bull)}
+.indicator.bear{border-color:rgba(239,68,68,.35);background:rgba(239,68,68,.08);color:#ffd0d0}
+.indicator.bear .dot{background:var(--bear)}
+.indicator.neutral{border-color:rgba(100,116,139,.35);background:rgba(100,116,139,.08);color:#e2e8f0}
+.indicator.neutral .dot{background:#94a3b8}
+.indicator.warn{border-color:rgba(245,158,11,.35);background:rgba(245,158,11,.08);color:#ffdf9a}
+.indicator.warn .dot{background:var(--warn)}
+/* Technical indicator variants */
+.indicator.ema{border-color:rgba(96,165,250,.35);background:rgba(96,165,250,.08);color:#cfe6ff}
+.indicator.ema .dot{background:var(--ema)}
+.indicator.sma{border-color:rgba(52,211,153,.35);background:rgba(52,211,153,.08);color:#c9ffe7}
+.indicator.sma .dot{background:var(--sma)}
+.indicator.vwap{border-color:rgba(167,139,250,.35);background:rgba(167,139,250,.08);color:#e6deff}
+.indicator.vwap .dot{background:var(--vwap)}
+.indicator.volume{border-color:rgba(56,189,248,.35);background:rgba(56,189,248,.08);color:#cfe7ff}
+.indicator.volume .dot{background:var(--accent)}
+.indicator.macd.bull{border-color:rgba(244,114,182,.35);background:rgba(244,114,182,.08);color:#ffd6e9}
+.indicator.macd.bull .dot{background:var(--macd)}
+.indicator.macd.bear{border-color:rgba(251,113,133,.35);background:rgba(251,113,133,.08);color:#ffd6d9}
+.indicator.macd.bear .dot{background:var(--signal)}
+.indicator.rsi.overbought{border-color:rgba(245,158,11,.35);background:rgba(245,158,11,.08);color:#ffdf9a}
+.indicator.rsi.overbought .dot{background:var(--rsi-over)}
+.indicator.rsi.oversold{border-color:rgba(34,211,238,.35);background:rgba(34,211,238,.08);color:#cffafe}
+.indicator.rsi.oversold .dot{background:var(--rsi-under)}
+.indicator.doji{border-color:rgba(148,163,184,.35);background:rgba(148,163,184,.08);color:#e2e8f0}
+.indicator.doji .dot{background:#94a3b8}
+
+.ticker{font-variant-numeric:tabular-nums;font-feature-settings:"tnum" 1}
+.ticker.up{color:var(--bull)}
+.ticker.down{color:var(--bear)}
+.ticker.flat{color:#cbd5e1}
+
+.sep{height:1px;background:#1f2937;border-radius:1px;opacity:.9}
+
+.tooltip{position:relative}
+.tooltip:hover .tip{opacity:1;transform:translateY(-2px)}
+.tip{position:absolute;bottom:100%;left:50%;transform:translate(-50%,-4px);opacity:0;pointer-events:none;background:#0b1220;border:1px solid #263346;border-radius:8px;padding:6px 8px;white-space:nowrap;color:#cbd5e1;font-size:12px;box-shadow:0 12px 30px -20px var(--shadow)}
+
+.shadow-soft{box-shadow:0 6px 18px -14px var(--shadow)}
+.ring{box-shadow:0 0 0 1px var(--ring)}

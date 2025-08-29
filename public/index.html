@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="styles.css?v=2">
 </head>
 <body>
   <header class="app-header">
@@ -27,7 +27,7 @@
       </div>
       <div class="metric">
         <div class="label">Live Price</div>
-        <div class="value" id="price">--</div>
+        <div class="value ticker" id="price">--</div>
       </div>
       <div class="metric">
         <div class="label">MA Signal</div>
@@ -89,7 +89,7 @@
         <h3>Breakout Analysis</h3>
         <div class="kv"><span>Prediction</span><span id="breakoutPrediction">--</span></div>
         <div class="kv"><span>Key Level</span><span id="breakoutLevel">--</span></div>
-        <div class="kv"><span>Direction</span><span id="breakoutDirection">--</span></div>
+        <div class="kv"><span>Direction</span><span id="breakoutDirection" class="indicator neutral"><span class="dot"></span><span class="text">--</span></span></div>
       </div>
       <div class="card">
         <h3>Upward Targets</h3>
@@ -104,11 +104,11 @@
 
   <footer class="footer">Data from Yahoo Finance. Auto-refresh every 60s.</footer>
 
-  <script src="main.js"></script>
+  <script src="main.js?v=2"></script>
   <script>
     if ('serviceWorker' in navigator) {
       // Optional: cache static assets
-      window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+      window.addEventListener('load', () => navigator.serviceWorker.register('sw.js?v=2').catch(() => {}));
     }
   </script>
 </body>
