@@ -1,0 +1,118 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Nifty Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="app-header">
+    <div class="brand">Nifty Tracker</div>
+    <div class="times">
+      <span id="marketTime">Market Time: --</span>
+      <span id="updatedTime">Updated: --</span>
+      <button id="refreshBtn" class="btn">Refresh</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="card highlight">
+      <div class="metric">
+        <div class="label">Symbol</div>
+        <div class="value" id="symbol">--</div>
+      </div>
+      <div class="metric">
+        <div class="label">Live Price</div>
+        <div class="value" id="price">--</div>
+      </div>
+      <div class="metric">
+        <div class="label">MA Signal</div>
+        <div class="badge" id="maSignal">--</div>
+      </div>
+      <div class="metric">
+        <div class="label">Risk</div>
+        <div class="badge" id="riskLevel">--</div>
+      </div>
+    </section>
+
+    <section class="grid two">
+      <div class="card">
+        <h3>Moving Averages</h3>
+        <div class="kv"><span>MA 10</span><span id="ma10">--</span></div>
+        <div class="kv"><span>MA 15</span><span id="ma15">--</span></div>
+        <div class="kv"><span>MA 20</span><span id="ma20">--</span></div>
+        <div class="kv"><span>MA 30</span><span id="ma30">--</span></div>
+        <div class="kv"><span>MA 50</span><span id="ma50">--</span></div>
+        <div class="kv"><span>MA 100</span><span id="ma100">--</span></div>
+      </div>
+      <div class="card">
+        <h3>Volatility (VIX)</h3>
+        <div class="kv"><span>VIX</span><span id="vixValue">--</span></div>
+        <div class="kv"><span>Prediction</span><span id="vixPrediction">--</span></div>
+      </div>
+    </section>
+
+    <section class="grid three">
+      <div class="card">
+        <h3>Pivot Points</h3>
+        <div class="kv"><span>Pivot</span><span id="pivot">--</span></div>
+        <div class="kv"><span>R1</span><span id="r1">--</span></div>
+        <div class="kv"><span>R2</span><span id="r2">--</span></div>
+        <div class="kv"><span>R3</span><span id="r3">--</span></div>
+        <div class="kv"><span>S1</span><span id="s1">--</span></div>
+        <div class="kv"><span>S2</span><span id="s2">--</span></div>
+        <div class="kv"><span>S3</span><span id="s3">--</span></div>
+      </div>
+      <div class="card">
+        <h3>Fibonacci Levels</h3>
+        <div class="kv"><span>23.6%</span><span id="fib236">--</span></div>
+        <div class="kv"><span>38.2%</span><span id="fib382">--</span></div>
+        <div class="kv"><span>50.0%</span><span id="fib500">--</span></div>
+        <div class="kv"><span>61.8%</span><span id="fib618">--</span></div>
+        <div class="kv"><span>127.2%</span><span id="fib1272">--</span></div>
+        <div class="kv"><span>161.8%</span><span id="fib1618">--</span></div>
+      </div>
+      <div class="card">
+        <h3>Bollinger Bands</h3>
+        <div class="kv"><span>Upper</span><span id="bbUpper">--</span></div>
+        <div class="kv"><span>Middle</span><span id="bbMiddle">--</span></div>
+        <div class="kv"><span>Lower</span><span id="bbLower">--</span></div>
+      </div>
+    </section>
+
+    <section class="grid two">
+      <div class="card">
+        <h3>Breakout Analysis</h3>
+        <div class="kv"><span>Prediction</span><span id="breakoutPrediction">--</span></div>
+        <div class="kv"><span>Key Level</span><span id="breakoutLevel">--</span></div>
+        <div class="kv"><span>Direction</span><span id="breakoutDirection">--</span></div>
+      </div>
+      <div class="card">
+        <h3>Upward Targets</h3>
+        <div class="kv"><span>Short-term</span><span id="targetShort">--</span></div>
+        <div class="kv"><span>Medium-term</span><span id="targetMedium">--</span></div>
+        <div class="kv"><span>Long-term</span><span id="targetLong">--</span></div>
+        <div class="kv"><span>Next Resistance</span><span id="nextResistance">--</span></div>
+        <div class="kv"><span>Next Support</span><span id="nextSupport">--</span></div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">Data from Yahoo Finance. Auto-refresh every 60s.</footer>
+
+  <script src="main.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      // Optional: cache static assets
+      window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+    }
+  </script>
+</body>
+<!-- The rest of the document is intentionally left minimal -->
+</html>
+
+
