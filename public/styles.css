@@ -14,7 +14,23 @@
 .grid.three{display:grid;grid-template-columns:repeat(3,1fr);gap:20px}
 .kv{display:flex;justify-content:space-between;border-bottom:1px dashed #223046;padding:8px 0;color:#cbd5e1}
 .footer{color:var(--muted);text-align:center;padding:24px 0;border-top:1px solid #1f2937;margin-top:8px}
-@media(max-width:900px){.highlight{grid-template-columns:repeat(2,1fr)}.grid.two{grid-template-columns:1fr}.grid.three{grid-template-columns:1fr}}
+
+/* VIX Card at top */
+.vix-card{margin-bottom:0}
+
+/* Dynamic Nifty + MA Layout */
+.nifty-ma-container{display:flex;flex-direction:column;gap:16px;align-items:center}
+.ma-above,.ma-below{display:flex;flex-direction:column;gap:8px;width:100%;max-width:400px;min-height:20px;border:1px dashed #333;padding:8px}
+.ma-above .ma-item,.ma-below .ma-item{background:var(--card);border:1px solid #1f2937;border-radius:8px;padding:12px;display:flex;justify-content:space-between;align-items:center;font-size:14px}
+.ma-above .ma-item{border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.05)}
+.ma-below .ma-item{border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.05)}
+.ma-above .ma-item .ma-label{color:var(--muted)}
+.ma-below .ma-item .ma-label{color:var(--muted)}
+.ma-above .ma-value{color:var(--bull);font-weight:600}
+.ma-below .ma-value{color:var(--bear);font-weight:600}
+.nifty-live{margin:16px 0;width:100%}
+
+@media(max-width:900px){.highlight{grid-template-columns:repeat(2,1fr)}.grid.two{grid-template-columns:1fr}.grid.three{grid-template-columns:1fr}.nifty-ma-container{gap:12px}.ma-above,.ma-below{max-width:100%}}
 .tag-bull{background:rgba(34,197,94,.15);color:#86efac}
 .tag-bear{background:rgba(239,68,68,.15);color:#fecaca}
 .tag-neutral{background:rgba(148,163,184,.15);color:#e2e8f0}
@@ -36,6 +52,11 @@
 .btn.secondary:hover{border-color:#36506f}
 .btn.ghost{background:transparent;border:1px solid #26455c;color:#9bdcff}
 .btn.ghost:hover{background:rgba(56,189,248,.08)}
+
+/* Auto-refresh button specific styling */
+.btn.bull{background:linear-gradient(180deg,var(--bull),#16a34a);box-shadow:0 8px 18px -10px rgba(34,197,94,.45);color:#001016}
+.btn.bull:hover{filter:brightness(1.04);transform:translateY(-1px)}
+.btn.bull:active{transform:translateY(0)}
 
 .badge{background:linear-gradient(180deg,#0f2030,#0f172a);border:1px solid #223045;color:#cfe7ff}
 .badge.warn{background:rgba(245,158,11,.12);border-color:rgba(245,158,11,.35);color:#ffdf9a}
@@ -106,3 +127,6 @@
 
 .shadow-soft{box-shadow:0 6px 18px -14px var(--shadow)}
 .ring{box-shadow:0 0 0 1px var(--ring)}
+
+/* Ensure MA items are styled even if variables fail */
+.ma-item{background:#101a2e;color:#e2e8f0;border-radius:8px;padding:12px;border:1px solid #223046}
