@@ -7,7 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css?v=2">
+  <link rel="stylesheet" href="styles.css?v=10">
 </head>
 <body>
   <header class="app-header">
@@ -16,43 +16,48 @@
       <span id="marketTime">Market Time: --</span>
       <span id="updatedTime">Updated: --</span>
       <button id="refreshBtn" class="btn">Refresh</button>
+      <button id="autoRefreshBtn" class="btn secondary">Auto-Refresh: OFF</button>
     </div>
   </header>
 
   <main class="container">
-    <section class="card highlight">
-      <div class="metric">
-        <div class="label">Symbol</div>
-        <div class="value" id="symbol">--</div>
-      </div>
-      <div class="metric">
-        <div class="label">Live Price</div>
-        <div class="value ticker" id="price">--</div>
-      </div>
-      <div class="metric">
-        <div class="label">MA Signal</div>
-        <div class="badge" id="maSignal">--</div>
-      </div>
-      <div class="metric">
-        <div class="label">Risk</div>
-        <div class="badge" id="riskLevel">--</div>
-      </div>
+    <!-- VIX Card at the top -->
+    <section class="card vix-card">
+      <h3>Volatility (VIX)</h3>
+      <div class="kv"><span>VIX</span><span id="vixValue">--</span></div>
+      <div class="kv"><span>Prediction</span><span id="vixPrediction">--</span></div>
     </section>
 
-    <section class="grid two">
-      <div class="card">
-        <h3>Moving Averages</h3>
-        <div class="kv"><span>MA 10</span><span id="ma10">--</span></div>
-        <div class="kv"><span>MA 15</span><span id="ma15">--</span></div>
-        <div class="kv"><span>MA 20</span><span id="ma20">--</span></div>
-        <div class="kv"><span>MA 30</span><span id="ma30">--</span></div>
-        <div class="kv"><span>MA 50</span><span id="ma50">--</span></div>
-        <div class="kv"><span>MA 100</span><span id="ma100">--</span></div>
+    <!-- Dynamic Nifty + MA Layout -->
+    <section class="nifty-ma-container">
+      <!-- MAs above Nifty rate -->
+      <div class="ma-above" id="maAbove">
+        <!-- MAs with values > current Nifty rate will be populated here -->
       </div>
-      <div class="card">
-        <h3>Volatility (VIX)</h3>
-        <div class="kv"><span>VIX</span><span id="vixValue">--</span></div>
-        <div class="kv"><span>Prediction</span><span id="vixPrediction">--</span></div>
+      
+      <!-- Live Nifty Rate Card -->
+      <section class="card highlight nifty-live">
+        <div class="metric">
+          <div class="label">Symbol</div>
+          <div class="value" id="symbol">--</div>
+        </div>
+        <div class="metric">
+          <div class="label">Live Price</div>
+          <div class="value ticker" id="price">--</div>
+        </div>
+        <div class="metric">
+          <div class="label">MA Signal</div>
+          <div class="badge" id="maSignal">--</div>
+        </div>
+        <div class="metric">
+          <div class="label">Risk</div>
+          <div class="badge" id="riskLevel">--</div>
+        </div>
+      </section>
+      
+      <!-- MAs below Nifty rate -->
+      <div class="ma-below" id="maBelow">
+        <!-- MAs with values < current Nifty rate will be populated here -->
       </div>
     </section>
 
@@ -102,17 +107,15 @@
     </section>
   </main>
 
-  <footer class="footer">Data from Yahoo Finance. Auto-refresh every 60s.</footer>
+  <footer class="footer">Data from Yahoo Finance. Auto-refresh: 30s.</footer>
 
-  <script src="main.js?v=2"></script>
+  <script src="main.js?v=10"></script>
   <script>
     if ('serviceWorker' in navigator) {
       // Optional: cache static assets
-      window.addEventListener('load', () => navigator.serviceWorker.register('sw.js?v=2').catch(() => {}));
+      window.addEventListener('load', () => navigator.serviceWorker.register('sw.js?v=10').catch(() => {}));
     }
   </script>
 </body>
 <!-- The rest of the document is intentionally left minimal -->
 </html>
-
-

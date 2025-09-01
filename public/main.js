@@ -3,12 +3,6 @@ const els = {
   price: document.getElementById('price'),
   maSignal: document.getElementById('maSignal'),
   riskLevel: document.getElementById('riskLevel'),
-  ma10: document.getElementById('ma10'),
-  ma15: document.getElementById('ma15'),
-  ma20: document.getElementById('ma20'),
-  ma30: document.getElementById('ma30'),
-  ma50: document.getElementById('ma50'),
-  ma100: document.getElementById('ma100'),
   vixValue: document.getElementById('vixValue'),
   vixPrediction: document.getElementById('vixPrediction'),
   pivot: document.getElementById('pivot'),
@@ -37,8 +31,58 @@ const els = {
   nextSupport: document.getElementById('nextSupport'),
   marketTime: document.getElementById('marketTime'),
   updatedTime: document.getElementById('updatedTime'),
-  refreshBtn: document.getElementById('refreshBtn')
+  refreshBtn: document.getElementById('refreshBtn'),
+  autoRefreshBtn: document.getElementById('autoRefreshBtn')
 };
+
+// Remove all holiday/weekend/market hour logic and set a fixed 30s refresh
+let refreshInterval = null;
+let isAutoRefreshEnabled = false;
+let consecutiveFailures = 0;
+const FIXED_REFRESH_RATE = 30 * 1000; // 30 seconds
+
+function startAutoRefresh() {
+  if (refreshInterval) {
+    clearInterval(refreshInterval);
+  }
+  refreshInterval = setInterval(() => {
+    loadData();
+  }, FIXED_REFRESH_RATE);
+  isAutoRefreshEnabled = true;
+  updateAutoRefreshButton();
+  console.log(`Auto-refresh started: 30 seconds (fixed)`);
+}
+
+function stopAutoRefresh() {
+  if (refreshInterval) {
+    clearInterval(refreshInterval);
+    refreshInterval = null;
+  }
+  isAutoRefreshEnabled = false;
+  updateAutoRefreshButton();
+  console.log('Auto-refresh stopped');
+}
+
+function toggleAutoRefresh() {
+  if (isAutoRefreshEnabled) {
+    stopAutoRefresh();
+  } else {
+    startAutoRefresh();
+  }
+}
+
+function updateAutoRefreshButton() {
+  const btn = els.autoRefreshBtn;
+  if (btn) {
+    btn.textContent = `Auto-Refresh: ${isAutoRefreshEnabled ? 'ON' : 'OFF'} (30s)`;
+    btn.classList.remove('secondary', 'bull');
+    if (isAutoRefreshEnabled) {
+      btn.classList.add('bull');
+    } else {
+      btn.classList.add('secondary');
+    }
+  }
+}
 
 function setBadge(el, text) {
   el.textContent = text;
@@ -80,10 +124,121 @@ function setIndicator(el, type, signal) {
   if (dotEl) dotEl.style.opacity = '1';
 }
 
+function arrangeMovingAverages(maData, currentPrice) {
+  console.log('arrangeMovingAverages called with:', { maData, currentPrice });
+  
+  const maAbove = document.getElementById('maAbove');
+  const maBelow = document.getElementById('maBelow');
+  
+  if (!maAbove || !maBelow) {
+    console.error('MA containers not found:', { maAbove, maBelow });
+    return;
+  }
+  
+  // Clear existing content
+  maAbove.innerHTML = '';
+  maBelow.innerHTML = '';
+  
+  // Define MA periods and their labels
+  const maPeriods = [
+    { key: 'ma10', label: 'MA 10' },
+    { key: 'ma15', label: 'MA 15' },
+    { key: 'ma20', label: 'MA 20' },
+    { key: 'ma30', label: 'MA 30' },
+    { key: 'ma50', label: 'MA 50' },
+    { key: 'ma100', label: 'MA 100' }
+  ];
+  
+  // Sort MAs by value (descending for above, ascending for below)
+  const maAboveList = [];
+  const maBelowList = [];
+  
+  maPeriods.forEach(period => {
+    const value = maData[period.key];
+    console.log(`Processing ${period.label}:`, { key: period.key, value, currentPrice });
+    if (value && typeof value === 'number') {
+      if (value > currentPrice) {
+        maAboveList.push({ ...period, value });
+        console.log(`Added ${period.label} to above list`);
+      } else if (value < currentPrice) {
+        maBelowList.push({ ...period, value });
+        console.log(`Added ${period.label} to below list`);
+      }
+    }
+  });
+  
+  console.log('MA lists:', { maAboveList, maBelowList });
+  
+  // Sort above MAs in descending order (highest at top)
+  maAboveList.sort((a, b) => b.value - a.value);
+  
+  // Sort below MAs in ascending order (lowest at top)
+  maBelowList.sort((a, b) => a.value - b.value);
+  
+  // Create MA items for above
+  maAboveList.forEach(ma => {
+    const maItem = document.createElement('div');
+    maItem.className = 'ma-item';
+    maItem.innerHTML = `
+      <span class="ma-label">${ma.label}</span>
+      <span class="ma-value">${ma.value.toFixed(2)}</span>
+    `;
+    maAbove.appendChild(maItem);
+  });
+  
+  // Create MA items for below
+  maBelowList.forEach(ma => {
+    const maItem = document.createElement('div');
+    maItem.className = 'ma-item';
+    maItem.innerHTML = `
+      <span class="ma-label">${ma.label}</span>
+      <span class="ma-value">${ma.value.toFixed(2)}</span>
+    `;
+    maBelow.appendChild(maItem);
+  });
+  
+  // Add placeholder text if containers are empty
+  if (maAboveList.length === 0) {
+    maAbove.innerHTML = '<div style="text-align: center; color: var(--muted); padding: 20px;">No MAs above current price</div>';
+  }
+  
+  if (maBelowList.length === 0) {
+    maBelow.innerHTML = '<div style="text-align: center; color: var(--muted); padding: 20px;">No MAs below current price</div>';
+  }
+  
+  console.log('MA arrangement completed');
+}
+
+// Enhanced loadData with error handling
 async function loadData() {
   try {
     const res = await fetch('/api/nifty', { cache: 'no-store' });
-    if (!res.ok) throw new Error('API error');
+    
+    if (!res.ok) {
+      if (res.status === 429) { // Rate limited
+        console.warn('Rate limited, backing off...');
+        consecutiveFailures++;
+        
+        if (consecutiveFailures >= 3) {
+          // Back off for 5 minutes
+          stopAutoRefresh();
+          setTimeout(() => {
+            consecutiveFailures = 0;
+            if (isAutoRefreshEnabled) {
+              startAutoRefresh();
+            }
+          }, 5 * 60 * 1000);
+          
+          els.updatedTime.textContent = 'Rate limited - Auto-refresh paused for 5 minutes';
+          return;
+        }
+      }
+      throw new Error(`API error: ${res.status}`);
+    }
+    
+    // Reset failure count on success
+    consecutiveFailures = 0;
+    
     const d = await res.json();
     els.symbol.textContent = d.symbol;
     els.price.textContent = d.currentPrice?.toFixed ? d.currentPrice.toFixed(2) : d.currentPrice;
@@ -100,12 +255,10 @@ async function loadData() {
     setBadge(els.maSignal, d.maPrediction || d.signal || 'Neutral');
     setBadge(els.riskLevel, d.riskLevel || d.vix?.prediction || 'Neutral');
 
-    els.ma10.textContent = d.ma.ma10;
-    els.ma15.textContent = d.ma.ma15;
-    els.ma20.textContent = d.ma.ma20;
-    els.ma30.textContent = d.ma.ma30;
-    els.ma50.textContent = d.ma.ma50;
-    els.ma100.textContent = d.ma.ma100;
+    // Arrange MAs dynamically around the current price
+    if (d.ma && d.currentPrice) {
+      arrangeMovingAverages(d.ma, d.currentPrice);
+    }
 
     els.vixValue.textContent = d.vix.value;
     els.vixPrediction.textContent = d.vix.prediction;
@@ -149,14 +302,6 @@ async function loadData() {
     els.breakoutLevel.textContent = d.breakoutPrediction.breakoutLevel;
     setIndicator(els.breakoutDirection, 'vwap', d.breakoutPrediction.direction);
 
-    // Colorize MA values relative to current price
-    setPosNeg(els.ma10, d.ma.ma10, d.currentPrice);
-    setPosNeg(els.ma15, d.ma.ma15, d.currentPrice);
-    setPosNeg(els.ma20, d.ma.ma20, d.currentPrice);
-    setPosNeg(els.ma30, d.ma.ma30, d.currentPrice);
-    setPosNeg(els.ma50, d.ma.ma50, d.currentPrice);
-    setPosNeg(els.ma100, d.ma.ma100, d.currentPrice);
-
     els.targetShort.textContent = d.upwardTargets.shortTerm;
     els.targetMedium.textContent = d.upwardTargets.mediumTerm;
     els.targetLong.textContent = d.upwardTargets.longTerm;
@@ -172,13 +317,37 @@ async function loadData() {
       els.vixPrediction.classList.remove('warn');
       if (/High|Extreme/i.test(d.vix.prediction)) els.vixPrediction.classList.add('warn');
     }
+    
   } catch (e) {
-    els.updatedTime.textContent = 'Error updating';
+    console.error('Error loading data:', e);
+    consecutiveFailures++;
+    els.updatedTime.textContent = `Error updating (${consecutiveFailures} failures)`;
+    
+    // If too many failures, back off
+    if (consecutiveFailures >= 5) {
+      stopAutoRefresh();
+      setTimeout(() => {
+        consecutiveFailures = 0;
+        if (isAutoRefreshEnabled) {
+          startAutoRefresh();
+        }
+      }, 10 * 60 * 1000); // 10 minutes
+    }
   }
 }
 
-els.refreshBtn.addEventListener('click', loadData);
+// Initialize the refresh system
+function initializeRefreshSystem() {
+  if (els.autoRefreshBtn) {
+    els.autoRefreshBtn.addEventListener('click', toggleAutoRefresh);
+  }
+  if (els.refreshBtn) {
+    els.refreshBtn.addEventListener('click', loadData);
+  }
+  startAutoRefresh();
+  // No need for periodic rate checks or holiday updates
+}
+
+// Initialize everything
 loadData();
-setInterval(loadData, 60 * 1000);
-
-
+initializeRefreshSystem();
