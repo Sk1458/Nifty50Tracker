@@ -2,6 +2,8 @@
 
 A simple, responsive web dashboard for tracking the Nifty 50 index, key moving averages, volatility (VIX), and technical indicators. Data is sourced from Yahoo Finance.
 
+🚀 **Live Demo:** [Click here to view](https://nifty50tracker.onrender.com/)
+
 ## Features
 - Live Nifty 50 price and key technical indicators
 - Dynamic arrangement of moving averages (MAs) above/below the live price
@@ -40,9 +42,6 @@ A simple, responsive web dashboard for tracking the Nifty 50 index, key moving a
 
 ## Contributing
 PRs welcome! Please open an issue to discuss major changes first.
-
-## License
-MIT
 
 ## Support
 For questions, open an issue or contact the maintainer.
